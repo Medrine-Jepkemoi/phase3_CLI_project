@@ -1,6 +1,6 @@
 from faker import Faker
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 Base = declarative_base()
 
@@ -18,6 +18,8 @@ class Customer(Base):
     customer_mobile = Column(String)
     customer_order = relationship('OrderItem', back_populates = 'order_customer')
     
+    def __repr__(self):
+        return(f'Customer(customer_id = {self.customer_id}, customer_fname = {self.customer_fname}, customer_lname = {self.customer_lname}, customer_mobile = {self.customer_mobile})')
 
 # Admin table
 class Admin(Base):
@@ -59,6 +61,7 @@ class OrderItem(Base):
     order_customer = relationship('Customer', back_populates = 'customer_order')
 
 
-f = Faker()
-print(f.name())
-# print(f.age)
+
+# creating the session
+
+session_maker = sessionmaker(bind=create_engine('sqlite:///models.db'))
