@@ -1,10 +1,13 @@
+from faker import Faker
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
 
+# Instantiate faker class
+faker = Faker()
+
 # Creating the tables
-Base = declarative_base()
 
 # Customer table
 class Customer(Base):
@@ -54,3 +57,8 @@ class OrderItem(Base):
     totalprice = Column(Integer)
     customer_id = Column(Integer, ForeignKey('customers.customer_id'))
     order_customer = relationship('Customer', back_populates = 'customer_order')
+
+
+f = Faker()
+print(f.name())
+# print(f.age)
