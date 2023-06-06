@@ -66,6 +66,12 @@ class OrderItem(Base):
     customer_id = Column(Integer, ForeignKey('customers.customer_id'))
     order_customer = relationship('Customer', back_populates = 'customer_order')
 
+    def __repr__(self):
+        return(f'OrderItem(orderitem_id = {self.orderitem_id}, product_id = {self.product_id}, quantity = {self.quantity}, totalprice = {self.totalprice}, customer_id = {self.customer_id})')
+
+
+    
+
 
 
 # creating the session

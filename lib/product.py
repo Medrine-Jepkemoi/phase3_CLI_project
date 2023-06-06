@@ -41,4 +41,4 @@ def delete_product():
         session.delete(product)
         session.commit()
 
-delete_product()
+# delete_product()
