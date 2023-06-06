@@ -36,6 +36,9 @@ class Category(Base):
     category_name = Column(String)
     category_product = relationship('Product', back_populates = 'product_category')
 
+    def __repr__(self):
+        return(f'Category(category_id = {self.category_id}, category_name ={self.category_name})')
+
 
 class Product(Base):
     __tablename__ = 'products'
@@ -48,6 +51,9 @@ class Product(Base):
     admin_id = Column(Integer, ForeignKey('admins.admin_id'))
     product_admin = relationship('Admin', back_populates = 'admin_product')
     product_category = relationship('Category', back_populates = 'category_product')
+
+    def __repr__(self):
+        return(f'Product(product_id = {self.product_id}, product_name = {self.product_name}, product_description = {self.product_description}, product_price = {self.product_price}, product_amount = {self.product_amount}, category_id = {self.category_id}, admin_id ={self.admin_id})')
 
 
 class OrderItem(Base):
