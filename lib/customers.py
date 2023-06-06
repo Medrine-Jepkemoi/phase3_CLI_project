@@ -25,7 +25,7 @@ def read_customers():
         for customer in customers:
             print(customer)
 
-read_customers()
+# read_customers()
 
 
 
