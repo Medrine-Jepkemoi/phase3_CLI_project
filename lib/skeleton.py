@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 # creating the engine / database
 engine = create_engine('sqlite:///grocery.db')
@@ -13,9 +14,9 @@ class Customer(Base):
     customer_id = Column(Integer, primary_key = True)
     customer_fname = Column(String)
     customer_lname = Column(String)
-    customer_location = Column(String)
     customer_mobile = Column(String)
-
+    customer_order = relationship('OrderItem', back_populates = 'order_customer')
+    
 
 # Admin table
 class Admin(Base):
@@ -23,29 +24,38 @@ class Admin(Base):
     admin_id = Column(Integer, primary_key = True)
     admin_fname = Column(String)
     admin_lname = Column(String)
+    admin_product = relationship('Product', back_populates = 'product_admin')
 
-class Grocery(Base):
-    __tablename__ = 'groceries'
-    grocery_id = Column(Integer, primary_key = True)
-    grocery_name = Column(String)
-    grocery_location = Column(String)
 
-class Categories(Base):
+class Category(Base):
     __tablename__ = 'categories'
     category_id = Column(Integer, primary_key = True)
     category_name = Column(String)
+    category_product = relationship('Product', back_populates = 'product_category')
+
 
 class Product(Base):
     __tablename__ = 'products'
     product_id = Column(Integer, primary_key = True)
     product_name = Column(String)
+    product_description = Column(String)
     product_price = Column(Integer)
     product_amount = Column(Integer)
+    category_id = Column(Integer, ForeignKey('categories.category_id'))
+    admin_id = Column(Integer, ForeignKey('admins.admin_id'))
+    product_admin = relationship('Admin', back_populates = 'admin_product')
+    product_category = relationship('Category', back_populates = 'category_product')
 
-class Order(Base):
-    __tablename__ = 'orders'
-    order_id = Column(Integer, primary_key = True)
-    order_amount = Column(Integer)
+
+class OrderItem(Base):
+    __tablename__ = 'orderitems'
+
+    orderitem_id = Column(Integer, primary_key = True)
+    product_id = Column(Integer)
+    quantity = Column(Integer)
+    totalprice = Column(Integer)
+    customer_id = Column(Integer, ForeignKey('customers.customer_id'))
+    order_customer = relationship('Customer', back_populates = 'customer_order')
 
 
 Base.metadata.create_all(engine)
