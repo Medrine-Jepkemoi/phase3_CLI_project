@@ -1,4 +1,6 @@
-from models import Product, faker, session_maker
+from datetime import datetime
+
+from models import OrderItem, Product, faker, session_maker
 
 # products = [
 #     Product(product_name = "Spinach", product_description = "This is a vegetable rich in iron, vitamin C and E", product_price = 10, product_amount = 60, category_id = '2', admin_id = '1'),
@@ -44,3 +46,17 @@ def delete_product():
 # delete_product()
 
 
+
+# Report on the most prefered product by customers based on purchase/orders
+def most_preferred_products():
+    with session_maker() as session:
+        report = session.query(Product.product_name, Product.product_description)\
+            .join(OrderItem, Product.product_id == OrderItem.product_id)\
+            .group_by(Product.product_id)\
+            .order_by(OrderItem.quantity.desc())\
+            .all()
+
+        print("Most Preferred Products Report in Descending Order:")
+        print(report)
+
+most_preferred_products()

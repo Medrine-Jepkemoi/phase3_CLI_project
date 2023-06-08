@@ -1,49 +1,11 @@
-# from customers import orderitems
-from models import OrderItem, Product, faker, session_maker
+from datetime import datetime
 
-# orderitems = [
-#     OrderItem(product_id = 1, quantity = 2, totalprice = 10, customer_id = 2),
-#     OrderItem(product_id = 1, quantity = 4, totalprice = 35, customer_id = 1)
-
-# ]
-
-# creating products
-def create_order():
-    with session_maker() as session:
-        for orderitem in orderitems:
-            session.add(orderitem)
-        session.commit()
-
-# create_order()
-
-def view_order():
-    with session_maker() as session:
-        orderitems = session.query(OrderItem)
-        for orderitem in orderitems:
-            print(orderitem)
-
-# view_order()
-
-def update_order():
-    with session_maker() as session:
-        orderitem = session.query(OrderItem).filter(OrderItem.orderitem_id == 2).first()
-        orderitem.quantity = 8
-        session.commit()
-
-# update_order()
-
-def delete_order(orderitem_id):
-    with session_maker() as session:
-        orderitem = session.query(OrderItem).filter(OrderItem.orderitem_id == orderitem_id).first()
-        session.delete(orderitem)
-        session.commit()
-
-# delete_order(1)
+from models import Customer, OrderItem, Product, faker, session_maker
 
 # Customer functions on orders
 #  View customer order
 
-def customer_order(customer_id):
+def customer_orderhistory(customer_id):
     with session_maker() as session:
 
         orderitems = session.query(OrderItem).filter(OrderItem.customer_id == customer_id).all()
@@ -56,6 +18,7 @@ def customer_order(customer_id):
                 product = session.query(Product).get(orderitem.product_id)
                 order_info = {
                     "Order Id": orderitem.orderitem_id,
+                    "Order Date": orderitem.order_date,
                     "Product": product.product_name,
                     "Quantity": orderitem.quantity,
                     "Total Price": orderitem.totalprice
@@ -64,26 +27,83 @@ def customer_order(customer_id):
 
             for order_info in order_details:
                 print(order_info)
-customer_order(2)
+# customer_orderhistory(2)
+
+
+# View orders made on the current day by the current customer
+def find_orders(customer_id, date):
+    with session_maker() as session:
+        orders = session.query(OrderItem).filter(OrderItem.customer_id == customer_id, OrderItem.order_date.like(f'{date}%')).all()
+        if len(orders) == 0:
+            print("No orders found for the customer on the specified day")
+        else:
+            for order in orders:
+                product = session.query(Product).get(order.product_id)
+                print(f"Order ID: {order.orderitem_id}, Order Date: {order.order_date} Product: {product.product_name}, Quantity: {order.quantity}, Total Price: {order.totalprice}")
+
+
+# find_orders(customer_id, date)
 
 
 # Customer updating order item
-def update_orderitem(orderitem_id, quantity):
+def update_order_item(order_item_id, new_quantity):
     with session_maker() as session:
-        orderitem = session.query(OrderItem).filter_by(orderitem_id = orderitem_id).first()
-        orderitem.quantity += quantity
-        print("Order item updated successfully")
-        session.commit()
-# update_orderitem(1, 5)
+        orderitem = session.query(OrderItem).filter_by(orderitem_id=order_item_id).first()
+        if orderitem is not None:
+            # Calculate quantity difference 
+            quantity_diff = new_quantity - orderitem.quantity
+
+            product = session.query(Product).filter_by(product_id=orderitem.product_id).first()
+            # Update the order item quantity and total price
+            orderitem.quantity = new_quantity
+            orderitem.totalprice = product.product_price * new_quantity
+
+            # Update product amount
+            if product is not None:
+                product.product_amount -= quantity_diff
+
+            session.commit()
+            print("Order item updated successfully.")
+        else:
+            print("Order item not found.")
+
+
+# update_order_item(order_item_id, new_quantity)
 
 
 
 # Customer deleting an order item
-def remove_orderitem(orderitem_id):
+def remove_orderitem(order_item_id):
     with session_maker() as session:
-        orderitem = session.query(OrderItem).filter_by(orderitem_id = orderitem_id).first()
-        session.delete(orderitem)
-        print("Order item deleted successfully")
-        session.commit()
+        orderitem = session.query(OrderItem).filter_by(orderitem_id=order_item_id).first()
+        if orderitem is not None:
+            product = session.query(Product).filter_by(product_id=orderitem.product_id).first()
+            if product is not None:
+                product.product_amount += orderitem.quantity
+                session.delete(orderitem)
+                session.commit()
+                print("Order item deleted successfully.")
+            else:
+                print("Product is not available.")
+        else:
+            print("Order item not found.")
 
-# remove_orderitem(4)
+# remove_orderitem(order_item_id)
+
+# Order invoice
+def get_total_price(customer_id):
+    current_date = datetime.now().strftime("%Y-%m-%d")
+    with session_maker() as session:
+        orders = session.query(OrderItem).filter_by(customer_id=customer_id, order_date=current_date).all()
+        if len(orders) > 0:
+            total_price = 0
+            for order in orders:
+                total_price += order.totalprice
+            print(f"Total price for customer ID {customer_id} on {current_date}: {total_price}")
+        else:
+            print("No orders found.")
+
+
+# customer_id = int(input("Enter customer ID: "))
+# get_total_price(customer_id)
+

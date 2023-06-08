@@ -1,12 +1,18 @@
 
-from admin import (add_product, add_stock, delete_product, update_price,
-                   view_productsadmin)
-from customers import customer_login, make_order, view_productscustomer
-from orderitem import customer_order, remove_orderitem, update_orderitem
+from datetime import datetime
+
+from admin import (add_product, add_stock, delete_product, highest_orderreport,
+                   update_price, view_productsadmin)
+from customers import (display_customer, make_order, validate_customer,
+                       view_productscustomer)
+from orderitem import (customer_orderhistory, find_orders, remove_orderitem,
+                       update_order_item)
+from product import most_preferred_products
 
 
 def main():
 
+    # Entrypoint of the system
     choice = 0
     while choice != 3:
         print("*** TUTTI FRUITY ONLINE GREENGROCERY")
@@ -16,46 +22,55 @@ def main():
 
         choice = int(input())
 
+        # enter system as a customer
         if choice == 1:
-            # enter system as a customer
-            customer_id = input("Enter your id: ")
-            customer_login(customer_id)
+            validate_customer()
 
             customer_choice = 0
-            while customer_choice != 6:
+            while customer_choice != 8:
 
                 print("*** Customer's View")
-                print("1) View products")
-                print("2) Make an order")
-                print("3) View orders")
-                print("4) Update order item")
-                print("5) Delete order item")
-                print("6) Go back to main menu")
+                print("1) View your details")
+                print("2) View products")
+                print("3) Make an order")
+                print("4) View orders")
+                print("5) Update order item")
+                print("6) Delete order item")
+                print("7) View orders history")
+                print("8) Go back to main menu")
 
                 customer_choice = int(input())
 
-                if customer_choice == 1:
-                    view_productscustomer()
+                if customer_choice ==  1:
+                    customer_id = int(input("Enter your customer ID: "))
+                    display_customer(customer_id)
                 elif customer_choice == 2:
+                    view_productscustomer()
+                elif customer_choice == 3:
                     product_id = input("Enter the product ID: ")
                     quantity = int(input("Enter the product quantity: "))
                     customer_id = input("Enter your id: ")
                     make_order(product_id, quantity, customer_id)
-                elif customer_choice == 3:
-                    customer_id = input("Enter your id: ")
-                    customer_order(customer_id)
                 elif customer_choice == 4:
-                    orderitem_id = input("Enter the order item ID: ")
-                    quantity = int(input("Enter the product quantity: "))
-                    update_orderitem(orderitem_id, quantity)
+                    customer_id = input("Enter your id: ")
+                    date = datetime.now().strftime("%Y-%m-%d")
+                    find_orders(customer_id, date)   
                 elif customer_choice == 5:
+                    order_item_id = int(input("Enter order item ID: "))
+                    new_quantity = int(input("Enter new quantity: "))
+                    update_order_item(order_item_id, new_quantity)
+                elif customer_choice == 6:
                     orderitem_id = input("Enter the order item ID: ")
                     remove_orderitem(orderitem_id)
-            
+                elif customer_choice == 7:
+                    customer_id = input("Enter your id: ")
+                    customer_orderhistory(customer_id)
+
+        # Enter the system as an administrator   
         if choice == 2:
 
             admin_choice = 0
-            while admin_choice != 6:
+            while admin_choice != 7:
             
                 print("*** Admin's View")
                 print("1) View products")
@@ -63,7 +78,8 @@ def main():
                 print("3) Update stock")
                 print("4) Update price")
                 print("5) Delete product")
-                print("6) Go back to main menu")
+                print("6) View admin reports")
+                print("7) Go back to main menu")
 
                 admin_choice =int(input())
 
@@ -94,6 +110,30 @@ def main():
                 elif admin_choice == 5:
                     product_id = input("Enter id of product you want to delete: ")
                     delete_product(product_id)
+                
+                elif admin_choice == 6:
+
+                    admin_reports = 0
+                    while admin_reports != 3:
+                        print("*** Admin Reports ***")
+                        print("1) Highest order amount in a day")
+                        print("2) Product preference in descending order")
+                        print("3) Go back to admin main menu")
+
+                        admin_reports =int(input())
+
+                        if admin_reports == 1:
+                            date = datetime.now().strftime("%Y-%m-%d")
+                            highest_orderreport(date)
+                        elif admin_reports == 2:
+                            most_preferred_products()
+
+
+
+
+
+                        
+
 
 
 

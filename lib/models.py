@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from faker import Faker
 from sqlalchemy import Column, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
@@ -64,6 +66,7 @@ class OrderItem(Base):
     quantity = Column(Integer)
     totalprice = Column(Integer)
     customer_id = Column(Integer, ForeignKey('customers.customer_id'))
+    order_date = Column(String, default=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     order_customer = relationship('Customer', back_populates = 'customer_order')
 
     def __repr__(self):

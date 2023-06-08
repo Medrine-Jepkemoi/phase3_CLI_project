@@ -1,4 +1,6 @@
-from models import Admin, Category, Product, session_maker
+from datetime import datetime
+
+from models import Admin, Category, Customer, OrderItem, Product, session_maker
 
 # from product import products
 
@@ -70,3 +72,47 @@ def delete_product(product_id):
         session.delete(product)
         session.commit()
 # delete_product(2)
+
+
+
+# Admin viewing the highest order amount on the current day
+def highest_orderreport(date):
+    with session_maker() as session:
+        # Query orders made on the specified day
+        orders = session.query(OrderItem).filter(OrderItem.order_date.like(f'{date}%')).all()
+        
+        if len(orders) == 0:
+            print("No orders found on the specified day")
+            return {}
+        else:
+            # Calculate the total price of each customer's orders
+            customer_totals = {}
+            for order_item in orders:
+                customer_id = order_item.customer_id
+                total_price = order_item.totalprice
+                if customer_id in customer_totals:
+                    customer_totals[customer_id] += total_price
+                else:
+                    customer_totals[customer_id] = total_price
+            
+            # Find the customer with the highest total order
+            highest_customer = max(customer_totals, key=customer_totals.get)
+            
+            # Retrieve the customer details
+            customer = session.query(Customer).get(highest_customer)
+            
+            # Store the report in a dictionary
+            report = {
+                'Customer Id': customer.customer_id,
+                'Customer Name': f"{customer.customer_fname} {customer.customer_lname}",
+                'Customer Mobile': customer.customer_mobile,
+                'Total Order Amount': customer_totals[highest_customer]
+            }
+            
+            print(report)
+            return 
+
+
+# date = datetime.now().strftime("%Y-%m-%d")
+# highest_orderreport(date)
+

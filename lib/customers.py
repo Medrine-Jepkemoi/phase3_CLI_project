@@ -1,48 +1,53 @@
+from sqlalchemy import func
+
 from models import Category, Customer, OrderItem, Product, faker, session_maker
 
 # from orderitem import orderitems
 
-customers = [
-    Customer(customer_fname = faker.first_name(), customer_lname = faker.last_name(), customer_mobile = '0765890766'),
-    Customer(customer_fname = faker.first_name(), customer_lname = faker.last_name(), customer_mobile = '0765890766')
-]
 
 
-
-# creating customers
-def create_customer():
+# Validate customer, if not present, allow signup
+def validate_customer():
+    customer_id = int(input("Enter customer ID: "))
     with session_maker() as session:
-        for customer in customers:
-            session.add(customer)
-        session.commit()
-
-
-# create_customer()
-
-# reading customer details
-def read_customers():
-    with session_maker() as session:
-        customers = session.query(Customer)
-
-        for customer in customers:
-            print(customer)
-
-# read_customers()
-
-# Validate customer
-
-def customer_login(customer_id):
-    with session_maker() as session:
-        customer = session.query(Customer).filter(Customer.customer_id == customer_id).first()
-        # for customer in customers:
+        customer = session.query(Customer).filter_by(customer_id=customer_id).first()
         if customer is None:
-            print("Create an account")
-            return False
+            print("Customer is not registered, please sign up to be registered.")
+            signup_customer()
         else:
-            print("Proceed to shop")
-            return True
+            print("Customer is registered.")
 
-# customer_login(2)
+# Signing up a new customer
+def signup_customer():
+    # Prompt for customer details
+    customer_fname = input("Enter your first name: ")
+    customer_lname = input("Enter your last name: ")
+    customer_mobile = input("Enter your mobile number: ")
+
+    with session_maker() as session:
+        new_customer = Customer(customer_fname=customer_fname, customer_lname=customer_lname, customer_mobile=customer_mobile)
+        session.add(new_customer)
+        session.commit()
+        print("Signup Successful!")
+
+# validate_customer()
+
+
+
+# Displaying individual customer details
+def display_customer(customer_id):
+    with session_maker() as session:
+        customer = session.query(Customer).filter_by(customer_id=customer_id).first()
+        if customer is not None:
+            print("These are your customer details:")
+            print(f"Customer ID: {customer.customer_id}")
+            print(f"First Name: {customer.customer_fname}")
+            print(f"Last Name: {customer.customer_lname}")
+            print(f"Mobile: {customer.customer_mobile}")
+        else:
+            print("Customer not found.")
+
+
 
 # Making an order
 def make_order(product_id, quantity, customer_id):
@@ -74,6 +79,7 @@ def make_order(product_id, quantity, customer_id):
 
 # make_order(1, 41, 2)
 
+# Viewing the available products for sale
 def view_productscustomer():
     with session_maker() as session:
         products = session.query(Product)
@@ -94,12 +100,14 @@ def view_productscustomer():
             print(product_info)
 # view_productscustomer()
 
-# # Deleting an order item
-# def remove_orderitem(orderitem_id):
-#     with session_maker() as session:
-#         orderitem = session.query(OrderItem).filter_by(orderitem_id = orderitem_id).first()
-#         for orderitem in orderitems:
-#             session.delete(orderitem)
-#         session.commit()
-# remove_orderitem(3)
+
+
+
+
+
+
+
+
+
+
 
