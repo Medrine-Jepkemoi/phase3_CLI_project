@@ -3,8 +3,9 @@ from datetime import datetime
 
 from admin import (add_product, add_stock, delete_product, highest_orderreport,
                    update_price, view_productsadmin)
+from category import view_categories
 from customers import (display_customer, make_order, validate_customer,
-                       view_productscustomer)
+                       view_customers, view_productscustomer)
 from orderitem import (customer_orderhistory, find_orders, remove_orderitem,
                        update_order_item)
 from product import most_preferred_products
@@ -70,23 +71,27 @@ def main():
         if choice == 2:
 
             admin_choice = 0
-            while admin_choice != 7:
+            while admin_choice != 8:
+
             
                 print("*** Admin's View")
-                print("1) View products")
-                print("2) Add products")
-                print("3) Update stock")
-                print("4) Update price")
-                print("5) Delete product")
-                print("6) View admin reports")
-                print("7) Go back to main menu")
+                print("1) View Categories")
+                print("2) View products")
+                print("3) Add products")
+                print("4) Update stock")
+                print("5) Update price")
+                print("6) Delete product")
+                print("7) View admin reports")
+                print("8) Go back to main menu")
 
                 admin_choice =int(input())
 
                 if admin_choice == 1:
+                    view_categories()
+                elif admin_choice == 2:
                     view_productsadmin()
 
-                elif admin_choice == 2:
+                elif admin_choice == 3:
                     product_name = input("Enter the name of the product: ")
                     product_description = input("Enter the description of the product: ")
                     product_price = input("Enter the price of the product: ")
@@ -97,28 +102,29 @@ def main():
 
                     add_product(product_name, product_description, product_price, product_amount, category_id, admin_id)
 
-                elif admin_choice == 3:
+                elif admin_choice == 4:
                     product_id = input("Enter the ID of the product: ")
                     quantity = int(input("Enter the quantity: "))
                     add_stock(product_id, quantity)
 
-                elif admin_choice == 4:
+                elif admin_choice == 5:
                     product_id = input("Enter the ID of the product: ")
                     price = int(input("Enter the price: "))
                     update_price(product_id, price)
                      
-                elif admin_choice == 5:
+                elif admin_choice == 6:
                     product_id = input("Enter id of product you want to delete: ")
                     delete_product(product_id)
                 
-                elif admin_choice == 6:
+                elif admin_choice == 7:
 
                     admin_reports = 0
                     while admin_reports != 3:
                         print("*** Admin Reports ***")
                         print("1) Highest order amount in a day")
                         print("2) Product preference in descending order")
-                        print("3) Go back to admin main menu")
+                        print("3) All customers' details")
+                        print("4) Go back to admin main menu")
 
                         admin_reports =int(input())
 
@@ -127,6 +133,8 @@ def main():
                             highest_orderreport(date)
                         elif admin_reports == 2:
                             most_preferred_products()
+                        elif admin_reports == 3:
+                            view_customers()
 
 
 

@@ -13,12 +13,22 @@ admins =  Admin(admin_fname = "Medrine", admin_lname = "Jepkemoi"),
 #     session.commit()
 
 # function to check if admin is valid. There can only be one admin
+def is_admin(admin_id):
+    with session_maker() as session:
+        admin = session.query(Admin).get(admin_id)
+        if admin is not None and admin.admin_id == 1:
+            print("Welcome admin.")
+        else:
+            print("Access denied, you are not an admin!")
+
+# is_admin(admin_id)
 
 # Admin adding product amount
 def add_stock(product_id, quantity):
     with session_maker() as session:
         product = session.query(Product).get(product_id)
         product.product_amount += quantity
+        print("Product update successfully!")
         session.commit()
 
 # add_stock(1, 2)
@@ -28,6 +38,7 @@ def update_price(product_id, price):
     with session_maker() as session:
         product = session.query(Product).get(product_id)
         product.product_price = price
+        print("Price updates successfully!")
         session.commit()
 
 # update_price(1, 15)
@@ -70,6 +81,7 @@ def delete_product(product_id):
     with session_maker() as session:
         product = session.query(Product).filter(Product.product_id == product_id).first()
         session.delete(product)
+        print("Product deleted successfullly!")
         session.commit()
 # delete_product(2)
 

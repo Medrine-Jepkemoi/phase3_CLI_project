@@ -7,13 +7,23 @@ categories = [
     Category(category_name = "Meat")
 ]
 
+# Hardcoding categories
 def create_categories():
     with session_maker() as session:
         for category in categories:
             session.add(category)
         session.commit()
 
-create_categories()
+# create_categories()
+
+# Viewing categories
+def view_categories():
+    with session_maker() as session:
+        categories = session.query(Category).all()
+        for category in categories:
+            print(category)
+
+# view_categories()
 
 
 

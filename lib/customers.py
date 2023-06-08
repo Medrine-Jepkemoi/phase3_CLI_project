@@ -2,8 +2,15 @@ from sqlalchemy import func
 
 from models import Category, Customer, OrderItem, Product, faker, session_maker
 
-# from orderitem import orderitems
 
+# View customer details
+def view_customers():
+    with session_maker() as session:
+        customers = session.query(Customer).all()
+        for customer in customers:
+            print(customer)
+
+# view_customers()
 
 
 # Validate customer, if not present, allow signup
