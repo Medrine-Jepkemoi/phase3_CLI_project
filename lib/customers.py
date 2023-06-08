@@ -1,4 +1,4 @@
-from models import Customer, OrderItem, Product, faker, session_maker
+from models import Category, Customer, OrderItem, Product, faker, session_maker
 
 # from orderitem import orderitems
 
@@ -42,7 +42,7 @@ def customer_login(customer_id):
             print("Proceed to shop")
             return True
 
-customer_login(2)
+# customer_login(2)
 
 # Making an order
 def make_order(product_id, quantity, customer_id):
@@ -73,6 +73,20 @@ def make_order(product_id, quantity, customer_id):
                 print("Order placed successfully.") 
 
 # make_order(1, 41, 2)
+
+def view_productscustomer():
+    with session_maker() as session:
+        products = session.query(Product)
+        all_products = []
+        # print(all_products)
+        for product in products:
+            category = session.query(Category).get(product.category_id)
+            all_products.append(
+                f"Product: {product.product_name}, Category: {category.category_name}, Description: {product.product_description}, Price: {product.product_price}, Available Units: {product.product_amount} "
+            )
+            print(all_products)
+        session.commit()
+# view_productscustomer()
 
 # # Deleting an order item
 # def remove_orderitem(orderitem_id):
