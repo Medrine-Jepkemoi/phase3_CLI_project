@@ -54,11 +54,17 @@ def customer_order(customer_id):
             order_details = []
             for orderitem in orderitems:
                 product = session.query(Product).get(orderitem.product_id)
-                order_details.append(
-                    f"Product: {product.product_name}, Quantity:{orderitem.quantity}, Total Price: {orderitem.totalprice}"
-                )        
-                print(order_details)
-# customer_order(2)
+                order_info = {
+                    "Order Id": orderitem.orderitem_id,
+                    "Product": product.product_name,
+                    "Quantity": orderitem.quantity,
+                    "Total Price": orderitem.totalprice
+                }
+                order_details.append(order_info)
+
+            for order_info in order_details:
+                print(order_info)
+customer_order(2)
 
 
 # Customer updating order item
@@ -68,7 +74,7 @@ def update_orderitem(orderitem_id, quantity):
         orderitem.quantity += quantity
         print("Order item updated successfully")
         session.commit()
-update_orderitem(1, 5)
+# update_orderitem(1, 5)
 
 
 

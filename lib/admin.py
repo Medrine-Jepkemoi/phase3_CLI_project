@@ -48,10 +48,19 @@ def view_productsadmin():
         # print(all_products)
         for product in products:
             category = session.query(Category).get(product.category_id)
-            all_products.append(
-                f"Product ID: {product.product_id}, Product: {product.product_name}, Description: {product.product_description}, Price: {product.product_price}, Available Units: {product.product_amount}, Category ID: {product.category_id}, Category: {category.category_name} "
-            )
-            print(all_products)
+            product_info = {
+                "Product ID": product.product_id,
+                "Product": product.product_name,
+                "Description": product.product_description,
+                "Price": product.product_price,
+                "Available Units": product.product_amount,
+                "Category ID": product.category_id,
+                "Category": category.category_name
+            }
+            all_products.append(product_info)
+
+        for product_info in all_products:
+            print(product_info)
         session.commit()
 # view_productsadmin()
 

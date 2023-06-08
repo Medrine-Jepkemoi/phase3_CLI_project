@@ -81,11 +81,17 @@ def view_productscustomer():
         # print(all_products)
         for product in products:
             category = session.query(Category).get(product.category_id)
-            all_products.append(
-                f"Product: {product.product_name}, Category: {category.category_name}, Description: {product.product_description}, Price: {product.product_price}, Available Units: {product.product_amount} "
-            )
-            print(all_products)
-        session.commit()
+            product_info = {
+                "Product ID": product.product_id,
+                "Product": product.product_name,
+                "Category": category.category_name,
+                "Description": product.product_description,
+                "Price": product.product_price,
+                "Available Units": product.product_amount
+            }
+            all_products.append(product_info)
+        for product_info in all_products:
+            print(product_info)
 # view_productscustomer()
 
 # # Deleting an order item
