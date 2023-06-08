@@ -1,4 +1,6 @@
 
+from admin import (add_product, add_stock, delete_product, update_price,
+                   view_productsadmin)
 from customers import customer_login, make_order, view_productscustomer
 from orderitem import customer_order, remove_orderitem, update_orderitem
 
@@ -64,6 +66,34 @@ def main():
                 print("6) Go back to main menu")
 
                 admin_choice =int(input())
+
+                if admin_choice == 1:
+                    view_productsadmin()
+
+                elif admin_choice == 2:
+                    product_name = input("Enter the name of the product: ")
+                    product_description = input("Enter the description of the product: ")
+                    product_price = input("Enter the price of the product: ")
+                    product_amount = input("Enter the amount of the product: ")
+                    category_id = input("Enter the category of the product: ")
+                    admin_id = input("Enter the your ID: ")
+
+
+                    add_product(product_name, product_description, product_price, product_amount, category_id, admin_id)
+
+                elif admin_choice == 3:
+                    product_id = input("Enter the ID of the product: ")
+                    quantity = int(input("Enter the quantity: "))
+                    add_stock(product_id, quantity)
+
+                elif admin_choice == 4:
+                    product_id = input("Enter the ID of the product: ")
+                    price = int(input("Enter the price: "))
+                    update_price(product_id, price)
+                     
+                elif admin_choice == 5:
+                    product_id = input("Enter id of product you want to delete: ")
+                    delete_product(product_id)
 
 
 

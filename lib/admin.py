@@ -38,7 +38,7 @@ def add_product(name, description, price, amount, category, admin):
         print("Product added successfully!")
         session.commit()
 
-add_product("Chicken thighs", "Excellent source of iron and zinc ", 50, 600, 4, 1)
+# add_product("Chicken thighs", "Excellent source of iron and zinc ", 50, 600, 4, 1)
 
 # Admin viewing products
 def view_productsadmin():
