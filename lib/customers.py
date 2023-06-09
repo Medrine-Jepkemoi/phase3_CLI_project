@@ -4,13 +4,16 @@ from models import Category, Customer, OrderItem, Product, faker, session_maker
 
 
 # View customer details
-def view_customers():
+def get_all_customers():
     with session_maker() as session:
         customers = session.query(Customer).all()
-        for customer in customers:
-            print(customer)
+        customer_tuples = [(customer.customer_id, customer.customer_fname, customer.customer_lname, customer.customer_mobile) for customer in customers]
+        return customer_tuples
 
-# view_customers()
+
+# all_customers = get_all_customers()
+# for customer in all_customers:
+#     print(customer)
 
 
 # Validate customer, if not present, allow signup
@@ -106,7 +109,6 @@ def view_productscustomer():
         for product_info in all_products:
             print(product_info)
 # view_productscustomer()
-
 
 
 

@@ -12,16 +12,6 @@ admins =  Admin(admin_fname = "Medrine", admin_lname = "Jepkemoi"),
 #         session.add(admin)
 #     session.commit()
 
-# function to check if admin is valid. There can only be one admin
-def is_admin(admin_id):
-    with session_maker() as session:
-        admin = session.query(Admin).get(admin_id)
-        if admin is not None and admin.admin_id == 1:
-            print("Welcome admin.")
-        else:
-            print("Access denied, you are not an admin!")
-
-# is_admin(admin_id)
 
 # Admin adding product amount
 def add_stock(product_id, quantity):

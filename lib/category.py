@@ -1,3 +1,5 @@
+from sqlalchemy import func
+
 from models import Category, faker, session_maker
 
 categories = [
