@@ -44,6 +44,7 @@ def add_product(name, description, price, amount, category, admin):
 # add_product("Chicken thighs", "Excellent source of iron and zinc ", 50, 600, 4, 1)
 
 # Admin viewing products
+# Dictionary implemented here
 def view_productsadmin():
     with session_maker() as session:
         products = session.query(Product)
@@ -78,6 +79,7 @@ def delete_product(product_id):
 
 
 # Admin viewing the highest order amount on the current day
+# Dictionary implemented here
 def highest_orderreport(date):
     with session_maker() as session:
         # Query orders made on the specified day

@@ -4,6 +4,7 @@ from models import Category, Customer, OrderItem, Product, faker, session_maker
 
 
 # View customer details
+# Tuple implemented
 def get_all_customers():
     with session_maker() as session:
         customers = session.query(Customer).all()
@@ -45,6 +46,7 @@ def signup_customer():
 
 
 # Displaying individual customer details
+# Dictionary implemeted
 def display_customer(customer_id):
     with session_maker() as session:
         customer = session.query(Customer).filter_by(customer_id=customer_id).first()
@@ -90,6 +92,7 @@ def make_order(product_id, quantity, customer_id):
 # make_order(1, 41, 2)
 
 # Viewing the available products for sale
+# List of dictionary implemented
 def view_productscustomer():
     with session_maker() as session:
         products = session.query(Product)
