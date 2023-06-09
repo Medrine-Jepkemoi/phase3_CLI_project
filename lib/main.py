@@ -5,8 +5,7 @@ from admin import (add_product, add_stock, delete_product, highest_orderreport,
                    update_price, view_productsadmin)
 from category import view_categories
 from customers import (display_customer, get_all_customers, make_order,
-                       validate_customer, view_customers,
-                       view_productscustomer)
+                       validate_customer, view_productscustomer)
 from orderitem import (customer_orderhistory, find_orders, remove_orderitem,
                        update_order_item)
 from product import most_preferred_products
